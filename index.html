@@ -11,21 +11,7 @@ html,body{width:100%;height:100%;background:#060610;overflow:hidden;font-family:
   user-select:none;-webkit-user-select:none;touch-action:none;}
 
 /* ── ROTATE OVERLAY ── */
-#rotateMsg{
-  display:none;position:fixed;inset:0;background:#060610;z-index:9999;
-  flex-direction:column;align-items:center;justify-content:center;
-  color:#ff2244;font-family:'Bangers',cursive;font-size:26px;
-  letter-spacing:4px;text-align:center;gap:16px;
-}
-#rotateMsg .ri{font-size:62px;animation:rspin 1.4s ease-in-out infinite alternate;}
-@keyframes rspin{from{transform:rotate(-25deg);}to{transform:rotate(25deg);}}
-#rotateMsg p{font-size:13px;color:#ff6688;letter-spacing:2px;font-family:'Orbitron',monospace;}
-
-/* portrait phones → show rotate, hide game */
-@media (orientation:portrait) and (max-width:768px){
-  #rotateMsg{display:flex;}
-  #gameOuter{display:none !important;}
-}
+#rotateMsg{ display:none; }
 
 /* ── OUTER SHELL ── */
 #gameOuter{
@@ -37,20 +23,22 @@ html,body{width:100%;height:100%;background:#060610;overflow:hidden;font-family:
 
 #titleBar{
   font-family:'Bangers',cursive;
-  font-size:clamp(14px,3vw,36px);
+  font-size:clamp(10px,2.5vw,28px);
   color:#ff2244;
-  letter-spacing:clamp(2px,1vw,10px);
-  margin-bottom:3px;
+  letter-spacing:clamp(2px,1vw,8px);
+  margin-bottom:2px;
   text-shadow:0 0 20px #ff2244,0 0 44px #ff224455;
   flex-shrink:0;line-height:1;
 }
 
-/* Canvas wrapper: always letterboxed, never overflows */
+/* Canvas wrapper: fills full screen, letterboxed */
 #gameWrapper{
   position:relative;
-  /* widest it can be while keeping aspect ratio and fitting in viewport height */
-  width:min(950px, 100vw, calc((100vh - 40px) * 950 / 560));
-  aspect-ratio:950/560;
+  /* fit inside viewport keeping 950:560 aspect ratio */
+  width: min(100vw, calc(100vh * 950 / 560));
+  height: min(100vh, calc(100vw * 560 / 950));
+  max-width:100vw;
+  max-height:100vh;
   flex-shrink:0;
 }
 
@@ -65,66 +53,67 @@ html,body{width:100%;height:100%;background:#060610;overflow:hidden;font-family:
 #ui{
   position:absolute;top:5px;left:0;right:0;
   display:flex;justify-content:space-between;
-  padding:0 8px;pointer-events:none;z-index:10;gap:3px;
+  padding:0 6px;pointer-events:none;z-index:10;gap:2px;
+  flex-wrap:nowrap;
 }
 .ui-box{
   background:rgba(0,0,0,0.82);
   border:1px solid #ff224455;border-radius:5px;
-  padding:2px 7px;color:#ff4466;
-  font-size:clamp(6px,1vw,10px);letter-spacing:1px;white-space:nowrap;
+  padding:2px 5px;color:#ff4466;
+  font-size:clamp(5px,1.2vw,10px);letter-spacing:1px;white-space:nowrap;
 }
-.ui-box span{color:#fff;font-size:clamp(10px,1.6vw,15px);font-weight:900;}
+.ui-box span{color:#fff;font-size:clamp(8px,1.8vw,15px);font-weight:900;}
 
 /* combo */
 #comboBox{
-  position:absolute;top:38px;right:8px;pointer-events:none;z-index:10;
-  font-family:'Bangers',cursive;font-size:clamp(13px,2.2vw,24px);
+  position:absolute;top:32px;right:6px;pointer-events:none;z-index:10;
+  font-family:'Bangers',cursive;font-size:clamp(11px,3vw,24px);
   color:#ffcc00;letter-spacing:2px;text-shadow:0 0 10px #ffcc00;
   opacity:0;transition:opacity 0.3s;
 }
 
 /* ── SHIELD BAR ── */
 #shieldBar{
-  position:absolute;top:40px;left:8px;pointer-events:none;z-index:10;
+  position:absolute;top:34px;left:6px;pointer-events:none;z-index:10;
   display:flex;flex-direction:column;gap:2px;
 }
-#shieldLabel{font-size:clamp(6px,0.8vw,8px);color:#44aaff;letter-spacing:1px;}
+#shieldLabel{font-size:clamp(5px,1.2vw,8px);color:#44aaff;letter-spacing:1px;}
 #shieldTrack{
-  width:clamp(55px,8vw,95px);height:6px;
+  width:clamp(45px,10vw,95px);height:5px;
   background:rgba(0,0,0,0.6);border:1px solid #44aaff44;border-radius:3px;overflow:hidden;
 }
 #shieldFill{height:100%;width:100%;background:linear-gradient(90deg,#1166cc,#44ddff);border-radius:3px;transition:width 0.25s;}
 
 /* lives */
 #livesBox{
-  position:absolute;top:60px;left:8px;pointer-events:none;z-index:10;
-  font-size:clamp(10px,1.5vw,14px);color:#ff6688;letter-spacing:1px;
+  position:absolute;top:52px;left:6px;pointer-events:none;z-index:10;
+  font-size:clamp(8px,2vw,14px);color:#ff6688;letter-spacing:1px;
 }
 
 /* ── POWER BAR ── */
 #powerBar{
-  position:absolute;bottom:7px;left:50%;transform:translateX(-50%);
+  position:absolute;bottom:6px;left:6px;
   pointer-events:none;z-index:10;
-  display:flex;flex-direction:column;align-items:center;gap:2px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:1px;
 }
-#killProgress{font-size:clamp(5px,0.8vw,8px);color:#aaaaff;letter-spacing:1px;}
-#powerLabel{font-size:clamp(5px,0.75vw,7px);letter-spacing:1.5px;color:#ffaa00;}
+#killProgress{font-size:clamp(5px,1.1vw,8px);color:#aaaaff;letter-spacing:1px;}
+#powerLabel{font-size:clamp(4px,0.9vw,7px);letter-spacing:1px;color:#ffaa00;}
 #powerTrack{
-  width:clamp(100px,14vw,170px);height:8px;
+  width:clamp(70px,16vw,170px);height:7px;
   background:rgba(0,0,0,0.6);border:1px solid #ffaa0055;border-radius:4px;overflow:hidden;
 }
 #powerFill{height:100%;width:0%;background:linear-gradient(90deg,#ff6600,#ffcc00);border-radius:4px;transition:width 0.12s;}
-#powerReady{font-size:clamp(5px,0.8vw,8px);letter-spacing:1.5px;color:#ffcc00;opacity:0;transition:opacity 0.3s;}
+#powerReady{font-size:clamp(5px,1.1vw,8px);letter-spacing:1.5px;color:#ffcc00;opacity:0;transition:opacity 0.3s;}
 
 /* ── BLAST BUTTON (mobile) ── */
 #blastBtn{
   display:none;
-  position:absolute;bottom:8px;right:8px;
-  width:clamp(52px,9vw,68px);height:clamp(52px,9vw,68px);
+  position:absolute;bottom:6px;right:6px;
+  width:clamp(48px,11vw,68px);height:clamp(48px,11vw,68px);
   background:radial-gradient(circle,#ff440066,#ff110022);
   border:2px solid #ff6600;border-radius:50%;
   color:#ffcc00;font-family:'Bangers',cursive;
-  font-size:clamp(9px,1.5vw,13px);letter-spacing:1px;
+  font-size:clamp(8px,2vw,13px);letter-spacing:1px;
   cursor:pointer;
   flex-direction:column;align-items:center;justify-content:center;
   gap:1px;text-align:center;z-index:15;pointer-events:auto;
@@ -139,10 +128,16 @@ html,body{width:100%;height:100%;background:#060610;overflow:hidden;font-family:
 #blastBtn.cool{background:radial-gradient(circle,#22222255,#00000022);border-color:#444;color:#555;}
 @keyframes bpulse{from{transform:scale(1);}to{transform:scale(1.1);}}
 
-/* Show blast button on touch devices OR narrow screens */
-@media (pointer:coarse),(max-width:700px){
+/* Always show action buttons — pointer:coarse = touch device */
+@media (pointer:coarse){
   #blastBtn{display:flex;}
+  #troopBtn{display:flex;}
   #gameCanvas{cursor:default;}
+}
+/* Also show on small screens even with mouse */
+@media (max-width:700px){
+  #blastBtn{display:flex;}
+  #troopBtn{display:flex;}
 }
 
 /* ── OVERLAY (menu / game over) ── */
@@ -152,42 +147,90 @@ html,body{width:100%;height:100%;background:#060610;overflow:hidden;font-family:
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   z-index:20;border-radius:6px;
-  padding:10px 14px;overflow-y:auto;
+  padding:6px 10px;overflow-y:auto;
 }
 .ov-title{
   font-family:'Bangers',cursive;
-  font-size:clamp(32px,7vw,78px);color:#ff2244;
-  letter-spacing:6px;line-height:1;margin-bottom:4px;text-align:center;
+  font-size:clamp(24px,6vw,78px);color:#ff2244;
+  letter-spacing:6px;line-height:1;margin-bottom:3px;text-align:center;
 }
-.ov-sub{font-size:clamp(7px,1vw,10px);color:#555;letter-spacing:4px;margin-bottom:8px;text-align:center;}
+.ov-sub{font-size:clamp(6px,1.2vw,10px);color:#555;letter-spacing:3px;margin-bottom:5px;text-align:center;}
 .legend-grid{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:3px 10px;margin-bottom:8px;
-  font-size:clamp(7px,1vw,10px);color:#777;letter-spacing:0.5px;
+  gap:2px 8px;margin-bottom:5px;
+  font-size:clamp(6px,1.2vw,10px);color:#777;letter-spacing:0.5px;
 }
 @media (min-width:520px){.legend-grid{grid-template-columns:repeat(4,1fr);}}
 .legend-grid b{color:#ffcc00;}
-.ov-hints{display:flex;flex-direction:column;gap:3px;margin-bottom:10px;text-align:center;}
-.hl{font-size:clamp(6px,0.9vw,9px);letter-spacing:1.5px;}
+.ov-hints{display:flex;flex-direction:column;gap:2px;margin-bottom:7px;text-align:center;}
+.hl{font-size:clamp(5px,1.1vw,9px);letter-spacing:1px;}
 .hl.gold{color:#ffaa00;}.hl.blue{color:#44aaff;}.hl.grn{color:#44cc66;}.hl.red{color:#ff8888;}
 #startBtn{
-  font-family:'Bangers',cursive;font-size:clamp(16px,2.8vw,28px);
+  font-family:'Bangers',cursive;font-size:clamp(14px,3.5vw,28px);
   letter-spacing:5px;background:transparent;
   border:2px solid #ff2244;color:#ff2244;
-  padding:9px 40px;cursor:pointer;transition:all 0.2s;
-  -webkit-tap-highlight-color:transparent;margin-top:4px;
+  padding:7px 30px;cursor:pointer;transition:all 0.2s;
+  -webkit-tap-highlight-color:transparent;margin-top:3px;
 }
 #startBtn:hover,#startBtn:active{background:#ff2244;color:#fff;box-shadow:0 0 28px #ff2244;}
+
+/* Tiny screens — hide title to maximize game area */
+@media (max-height:500px){
+  #titleBar{ display:none; }
+  #gameWrapper{
+    width:100vw;
+    height:100vh;
+  }
+}
+/* Portrait phones — stack vertically, canvas fills width */
+@media (orientation:portrait){
+  #gameWrapper{
+    width:100vw;
+    height:calc(100vw * 560 / 950);
+    max-height:100vh;
+  }
+}
+#troopBar{
+  position:absolute;bottom:6px;right:6px;
+  pointer-events:none;z-index:10;
+  display:flex;flex-direction:column;align-items:flex-end;gap:1px;
+  /* shift left to not overlap blast button */
+  margin-right:clamp(54px,12vw,78px);
+}
+#troopLabel{font-size:clamp(4px,1vw,7px);color:#44ffaa;letter-spacing:1px;text-align:right;}
+#troopProgress{font-size:clamp(5px,1.1vw,8px);color:#aaffcc;letter-spacing:1px;text-align:right;}
+#troopTrack{
+  width:clamp(65px,13vw,130px);height:6px;
+  background:rgba(0,0,0,0.6);border:1px solid #44ffaa55;border-radius:4px;overflow:hidden;
+}
+#troopFill{height:100%;width:0%;background:linear-gradient(90deg,#00cc66,#44ffaa);border-radius:4px;transition:width 0.12s;}
+#troopReady{font-size:clamp(5px,1.1vw,8px);letter-spacing:1.5px;color:#44ffaa;opacity:0;transition:opacity 0.3s;}
+
+/* Mobile troop button */
+#troopBtn{
+  display:none;
+  position:absolute;bottom:6px;right:calc(clamp(48px,11vw,68px) + 12px);
+  width:clamp(48px,11vw,68px);height:clamp(48px,11vw,68px);
+  background:radial-gradient(circle,#00cc6655,#00440022);
+  border:2px solid #44ffaa;border-radius:50%;
+  color:#44ffaa;font-family:'Bangers',cursive;
+  font-size:clamp(8px,2vw,13px);letter-spacing:1px;
+  cursor:pointer;
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:1px;text-align:center;z-index:15;pointer-events:auto;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:all 0.15s;line-height:1.1;
+}
+#troopBtn.trdy{
+  background:radial-gradient(circle,#44ffaa88,#00cc6633);
+  border-color:#44ffaa;box-shadow:0 0 16px #44ffaa99;
+  animation:tpulse 0.55s ease-in-out infinite alternate;
+}
+#troopBtn.tcool{background:radial-gradient(circle,#22222255,#00000022);border-color:#444;color:#555;}
+@keyframes tpulse{from{transform:scale(1);}to{transform:scale(1.1);}}
 </style>
 </head>
 <body>
-
-<!-- Portrait rotation prompt -->
-<div id="rotateMsg">
-  <div class="ri">📱</div>
-  <div>ROTATE TO LANDSCAPE</div>
-  <p>BEAST B NEEDS WIDE SCREEN</p>
-</div>
 
 <div id="gameOuter">
   <div id="titleBar">🔥 BEAST B 🔥</div>
@@ -221,6 +264,20 @@ html,body{width:100%;height:100%;background:#060610;overflow:hidden;font-family:
       <span id="blastIcon">⚡</span><span id="blastLbl">BLAST</span>
     </button>
 
+    <!-- Troop power bar -->
+    <div id="troopBar">
+      <div id="troopLabel">🐦 BIRD TROOP — E KEY</div>
+      <div id="troopProgress">KILLS TO TROOP: 3</div>
+      <div id="troopTrack"><div id="troopFill"></div></div>
+      <div id="troopReady">🐦 READY! 🐦</div>
+    </div>
+
+    <!-- Mobile troop button -->
+    <button id="troopBtn" class="tcool"
+      ontouchstart="handleTroopTouch(event)" onmousedown="activateTroop()">
+      <span id="troopBtnIcon">🐦</span><span id="troopBtnLbl">TROOP</span>
+    </button>
+
     <!-- Menu / Game Over overlay -->
     <div id="overlay">
       <div class="ov-title">BEAST B</div>
@@ -236,10 +293,11 @@ html,body{width:100%;height:100%;background:#060610;overflow:hidden;font-family:
         <div>💀 <b>A SECTION</b> boss 500</div>
       </div>
       <div class="ov-hints">
-        <div class="hl gold">⚡ KILL 4 BIRDS → EYE BLAST UNLOCKS</div>
+        <div class="hl gold">⚡ KILL 4 → EYE BLAST (CTRL+Q or ⚡ button)</div>
+        <div class="hl grn">🐦 KILL 3 → BIRD TROOP — AIM WITH TOUCH/MOUSE</div>
         <div class="hl blue">🛡 SHIELD ABSORBS 1 HIT — RECHARGES OVER TIME</div>
-        <div class="hl grn">💀 KILL A SECTION BOSS → +1 SHIELD + LIFE RESTORED</div>
-        <div class="hl red">TAP / CLICK TO FIRE · CTRL+Q OR ⚡ BUTTON = BLAST</div>
+        <div class="hl grn">💀 KILL A SECTION BOSS → +1 SHIELD + LIFE</div>
+        <div class="hl red">TAP = SHOOT · HOLD FINGER = AIM TROOP → RELEASE TO LAUNCH</div>
       </div>
       <button id="startBtn" onclick="startGame()">▶ PLAY</button>
     </div>
@@ -454,6 +512,29 @@ function sndWave(){
   playTone(880,'sine',0.18,0.01,0.18,t+0.2);
 }
 
+// Troop launch — cheerful chirp burst
+function sndTroopLaunch(){
+  var ac=getAC(),t=ac.currentTime;
+  playTone(880,'square',0.18,0.01,0.1,t);
+  playTone(1100,'square',0.15,0.01,0.1,t+0.07);
+  playTone(1320,'square',0.18,0.01,0.15,t+0.13);
+  playNoise(0.12,0.005,0.08,600,t);
+}
+
+// Troop ready — gentle 3-note birdsong
+function sndTroopReady(){
+  var ac=getAC(),t=ac.currentTime;
+  playTone(660,'sine',0.18,0.01,0.12,t);
+  playTone(880,'sine',0.15,0.01,0.1,t+0.09);
+  playTone(1100,'sine',0.2,0.01,0.16,t+0.16);
+}
+
+// Ally bird kills enemy — bright pop
+function sndAllyKill(){
+  playTone(660,'triangle',0.2,0.005,0.1);
+  playNoise(0.15,0.005,0.08,500);
+}
+
 // Track last power-ready state to trigger the sound once
 var _wasReady=false;
 
@@ -472,6 +553,27 @@ var DEFS={
   asection:{pts:500,hp:20,w:90,h:66,spd:0.5,move:'wave',   body:'#880000',wing:'#cc2222',nc:'#ff9900',tc:'#fff',    lbl:'A SECTION'}
 };
 var TYPES=['akash','masud','mahafuz','rudra','jisan','soumitra','riaz'];
+
+// ── Friendly Bird definitions (Nasim's troop) ─────────────────────────
+var ALLY_DEFS={
+  nahid: {
+    power:70, w:46,h:36, spd:1.2, move:'zigzag',
+    body:'#1a1a1a', wing:'#333333', beak:'#888',
+    eyeCol:'#ff4444', nc:'#000', tc:'#44ffaa', lbl:'NAHID'
+  },
+  mrinmoy: {
+    power:100, w:36,h:28, spd:3.5, move:'zigzag',
+    body:'#1155ee', wing:'#4488ff', beak:'#ffdd00',
+    eyeCol:'#ffff00', nc:'#001166', tc:'#88ccff', lbl:'MRINMOY'
+  },
+  noyon: {
+    power:40, w:30,h:24, spd:6.5, move:'straight',
+    body:'#ddcc00', wing:'#ffee44', beak:'#ff8800',
+    eyeCol:'#ff3300', nc:'#554400', tc:'#ffff88', lbl:'NOYON'
+  }
+};
+var ALLY_TYPES=['nahid','mrinmoy','noyon'];
+var allyTroopIndex=0; // cycles through ally types
 
 // ── State ─────────────────────────────────────────────────────────────
 var state='menu',score=0,kills=0,wave=1,frame=0,bestScore=0;
@@ -492,6 +594,12 @@ var MAX_LIVES=3,lives=MAX_LIVES;
 // Combo
 var combo=0,comboTimer=0,COMBO_WIN=90;
 
+// Troop Power
+var KILLS_PER_TROOP=3, TROOP_CD=320;
+var troopKills=0, troopReady=false, troopCD=0;
+var allies=[]; // active friendly birds
+var _wasTroopReady=false;
+
 // Boss gate
 var bossThreshold=-1; // -1 so first trigger at kills===0 never fires
 
@@ -509,25 +617,67 @@ function toGame(cx,cy){
 // ── Input ─────────────────────────────────────────────────────────────
 canvas.addEventListener('mousemove',function(e){var g=toGame(e.clientX,e.clientY);mouseX=g.x;mouseY=g.y;});
 canvas.addEventListener('click',function(e){if(state!=='playing')return;var g=toGame(e.clientX,e.clientY);shoot(g.x,g.y);});
+
+// ── Mobile touch: tap = shoot, hold = aim & release troop ─────────────
+var touchHoldTimer=null, touchHolding=false, touchHoldX=W/2, touchHoldY=H/2;
+var touchHoldProgress=0; // 0→1 as hold fills up
+var HOLD_MS=320; // ms to trigger hold mode
+
 canvas.addEventListener('touchstart',function(e){
   e.preventDefault();
   if(state!=='playing')return;
   var t=e.changedTouches[0];
   var g=toGame(t.clientX,t.clientY);
-  mouseX=g.x;mouseY=g.y;
-  shoot(g.x,g.y);
+  mouseX=g.x; mouseY=g.y;
+  touchHoldX=g.x; touchHoldY=g.y;
+  touchHolding=false; touchHoldProgress=0;
+
+  // Start hold timer — if finger stays, switch to troop-aim mode
+  touchHoldTimer=setTimeout(function(){
+    if(troopReady&&troopCD<=0){
+      touchHolding=true;
+    }
+  }, HOLD_MS);
 },{passive:false});
+
 canvas.addEventListener('touchmove',function(e){
   e.preventDefault();
   var t=e.changedTouches[0];
   var g=toGame(t.clientX,t.clientY);
-  mouseX=g.x;mouseY=g.y;
+  mouseX=g.x; mouseY=g.y;
+  // Update aim while holding
+  if(touchHolding){ touchHoldX=g.x; touchHoldY=g.y; }
+},{passive:false});
+
+canvas.addEventListener('touchend',function(e){
+  e.preventDefault();
+  if(state!=='playing'){ clearTimeout(touchHoldTimer); touchHolding=false; touchHoldProgress=0; return; }
+  var t=e.changedTouches[0];
+  var g=toGame(t.clientX,t.clientY);
+  mouseX=g.x; mouseY=g.y;
+
+  if(touchHolding){
+    // Release hold → fire troop toward held position
+    touchHoldX=g.x; touchHoldY=g.y;
+    activateTroop();
+  } else {
+    // Quick tap → shoot laser
+    clearTimeout(touchHoldTimer);
+    shoot(g.x,g.y);
+  }
+  touchHolding=false; touchHoldProgress=0;
+},{passive:false});
+
+canvas.addEventListener('touchcancel',function(e){
+  clearTimeout(touchHoldTimer); touchHolding=false; touchHoldProgress=0;
 },{passive:false});
 document.addEventListener('keydown',function(e){
   if(state!=='playing')return;
   if((e.ctrlKey||e.metaKey)&&(e.key==='q'||e.key==='Q')){e.preventDefault();activatePower();}
+  if(e.key==='e'||e.key==='E'){e.preventDefault();activateTroop();}
 });
 function handleBlastTouch(e){e.preventDefault();e.stopPropagation();activatePower();}
+function handleTroopTouch(e){e.preventDefault();e.stopPropagation();activateTroop();}
 
 // ── Start / Reset ─────────────────────────────────────────────────────
 function startGame(){
@@ -543,8 +693,12 @@ function startGame(){
   combo=0;comboTimer=0;
   bossThreshold=-1;
   _wasReady=false;
+  troopKills=0; troopReady=false; troopCD=0; allies=[];
+  _wasTroopReady=false; allyTroopIndex=0;
+  touchHolding=false; touchHoldProgress=0;
+  clearTimeout(touchHoldTimer);
   state='playing';
-  updateHUD();updateShieldUI();updateLivesUI();updateBlastBtn();
+  updateHUD();updateShieldUI();updateLivesUI();updateBlastBtn();updateTroopUI();
   if(rafId)cancelAnimationFrame(rafId);
   rafId=requestAnimationFrame(loop);
 }
@@ -582,6 +736,64 @@ function activatePower(){
   bigFlash(nasim.x+nasim.w/2,nasim.y-11);
   sndBlast();
   updateBlastBtn();
+}
+
+// ── Bird Troop Power ───────────────────────────────────────────────────
+function activateTroop(){
+  if(!troopReady||troopCD>0)return;
+  troopReady=false; troopKills=0; troopCD=TROOP_CD;
+
+  var startX=nasim.x+nasim.w+10;
+  var startY=nasim.y+20;
+  var tx=mouseX, ty=mouseY;
+  var dx=tx-startX, dy=ty-startY;
+  var baseAngle=Math.atan2(dy,dx);
+
+  // Spread angles for each ally — fan formation
+  var spreads=[-0.28, 0, 0.28];
+  var cx=nasim.x+nasim.w/2;
+
+  for(var ai=0;ai<ALLY_TYPES.length;ai++){
+    var type=ALLY_TYPES[ai];
+    var d=ALLY_DEFS[type];
+    var ang=baseAngle+spreads[ai];
+    var vx=Math.cos(ang)*d.spd;
+    var vy=Math.sin(ang)*d.spd;
+    // Slight Y offset so they don't stack on launch
+    var yOff=(ai-1)*14;
+
+    // Use closure-safe push with slight stagger via frame offset
+    allies.push({
+      x: startX,
+      y: startY+yOff,
+      baseY: startY+yOff,
+      type: type,
+      w: d.w, h: d.h,
+      vx: vx, vy: vy,
+      speed: d.spd,
+      move: d.move,
+      power: d.power,
+      wp: Math.random()*Math.PI*2,
+      zDir: ai%2===0?1:-1,
+      zTimer: 0,
+      wOff: Math.random()*Math.PI*2,
+      frame: 0,
+      launchDelay: ai*5 // stagger by 5 frames each
+    });
+  }
+  allyTroopIndex++;
+
+  // Big launch burst
+  for(var i=0;i<28;i++){
+    var a=Math.random()*Math.PI*2, spd=2+Math.random()*6;
+    particles.push({x:cx,y:nasim.y,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd,
+      life:30,maxLife:30,r:2+Math.random()*4,color:'#44ffaa',grav:0,type:'spark'});
+  }
+  particles.push({x:cx,y:nasim.y,vx:0,vy:0,life:22,maxLife:22,r:0,color:'#44ffaa',grav:0,type:'ring'});
+  particles.push({x:cx,y:nasim.y-24,vx:0,vy:-1.1,life:65,maxLife:65,
+    text:'🐦 FULL TROOP DEPLOYED!',color:'#44ffaa',grav:0,type:'text'});
+  sndTroopLaunch();
+  updateTroopUI();
 }
 
 // ── Particles ─────────────────────────────────────────────────────────
@@ -678,6 +890,14 @@ function update(){
     if(powerCD<=0&&killsSincePower>=KILLS_PER_POWER) powerReady=true;
   }
   if(powerBlastTimer>0){powerBlastTimer--;if(powerBlastTimer<=0)powerActive=false;}
+  // Troop cooldown
+  if(troopCD>0){
+    troopCD--;
+    if(troopCD<=0&&troopKills>=KILLS_PER_TROOP) troopReady=true;
+  }
+  if(troopReady&&!_wasTroopReady){ sndTroopReady(); }
+  _wasTroopReady=troopReady;
+
   // Fire power-ready sound exactly once
   if(powerReady && !_wasReady){ sndPowerReady(); }
   _wasReady=powerReady;
@@ -691,6 +911,13 @@ function update(){
 
   // Combo timeout
   if(comboTimer>0){comboTimer--;if(comboTimer<=0)combo=0;}
+
+  // Touch hold progress for visual ring
+  if(touchHolding){
+    touchHoldProgress=Math.min(touchHoldProgress+1/19,1);
+  } else if(!touchHolding && touchHoldProgress>0){
+    touchHoldProgress=Math.max(touchHoldProgress-0.08,0);
+  }
 
   // Spawn regular birds
   spawnTimer++;
@@ -713,6 +940,71 @@ function update(){
     var l=lasers[i];
     l.x+=l.vx;l.y+=l.vy;l.life--;
     if(l.life<=0||l.x>W+40||l.x<-40||l.y<-40||l.y>H+40) lasers.splice(i,1);
+  }
+
+  // ── Update ally birds (friendly troop) ───────────────────────────────
+  for(var i=allies.length-1;i>=0;i--){
+    var a=allies[i];
+    a.frame=(a.frame||0)+1;
+
+    // Stagger launch — freeze in place until delay expires
+    if(a.launchDelay>0){ a.launchDelay--; continue; }
+
+    a.wp+=0.22;
+
+    if(a.move==='zigzag'){
+      // Zigzag perpendicular to flight direction
+      a.zTimer++;
+      if(a.zTimer>18){a.zDir*=-1;a.zTimer=0;}
+      // Perpendicular to velocity: rotate 90 degrees
+      var vLen=Math.sqrt(a.vx*a.vx+a.vy*a.vy)||1;
+      var px=-a.vy/vLen, py=a.vx/vLen; // perpendicular unit vector
+      a.x+=a.vx+px*a.zDir*3.5;
+      a.y+=a.vy+py*a.zDir*3.5;
+    } else {
+      // Straight — full speed toward aim target
+      a.x+=a.vx;
+      a.y+=a.vy;
+    }
+
+    // Remove if flew off-screen (any edge)
+    if(a.x>W+120||a.x<-80||a.y<-80||a.y>H+80){ allies.splice(i,1); continue; }
+
+    // Ally collides with enemy birds
+    for(var j=birds.length-1;j>=0;j--){
+      var b=birds[j];
+      var aw=a.w/2,ah=a.h/2;
+      if(a.x>b.x-b.w/2-aw && a.x<b.x+b.w/2+aw &&
+         a.y>b.y-b.h/2-ah && a.y<b.y+b.h/2+ah){
+        b.hp-=Math.ceil(a.power/30);
+        b.flash=10;
+        for(var pi=0;pi<8;pi++){
+          var pa=Math.random()*Math.PI*2, ps=1.5+Math.random()*3;
+          particles.push({x:a.x,y:a.y,vx:Math.cos(pa)*ps,vy:Math.sin(pa)*ps,
+            life:15,maxLife:15,r:1.5+Math.random()*2,color:'#44ffaa',grav:0,type:'spark'});
+        }
+        if(b.hp<=0){
+          var bonus=combo>1?Math.floor(b.pts*(combo-1)*0.3):0;
+          var total=b.pts+bonus;
+          score+=total; kills++; killsSincePower++; troopKills++;
+          combo++; comboTimer=COMBO_WIN;
+          spawnBoom(b.x,b.y,total,DEFS[b.type].body);
+          sndAllyKill();
+          if(combo>=2) sndCombo(combo);
+          if(b.isBoss){
+            spawnBossKillReward(b.x,b.y); sndBossReward();
+            shieldBroken=false; shieldHP=1; shieldRegen=0; shieldFlash=0;
+            updateShieldUI();
+            if(lives<MAX_LIVES){ lives++; updateLivesUI(); }
+          }
+          birds.splice(j,1);
+          if(killsSincePower>=KILLS_PER_POWER&&powerCD<=0) powerReady=true;
+          if(troopKills>=KILLS_PER_TROOP&&troopCD<=0) troopReady=true;
+          updateBlastBtn(); updateComboUI();
+        }
+        break;
+      }
+    }
   }
 
   // Update birds + collisions
@@ -742,7 +1034,7 @@ function update(){
           combo++; comboTimer=COMBO_WIN;
           var bonus=combo>1?Math.floor(b.pts*(combo-1)*0.3):0;
           var total=b.pts+bonus;
-          score+=total; kills++; killsSincePower++;
+          score+=total; kills++; killsSincePower++; troopKills++;
           spawnBoom(b.x,b.y,total,DEFS[b.type].body);
           sndKill(b.isBoss);
           if(combo>=2) sndCombo(combo);
@@ -760,6 +1052,7 @@ function update(){
 
           birds.splice(i,1); killed=true;
           if(killsSincePower>=KILLS_PER_POWER&&powerCD<=0) powerReady=true;
+          if(troopKills>=KILLS_PER_TROOP&&troopCD<=0) troopReady=true;
           updateBlastBtn(); updateComboUI();
           break;
         }
@@ -797,6 +1090,7 @@ function update(){
   }
 
   updatePowerUI();
+  updateTroopUI();
 }
 
 // ── UI helpers ────────────────────────────────────────────────────────
@@ -841,6 +1135,33 @@ function updateBlastBtn(){
   else if(powerReady){btn.className='rdy';icon.textContent='⚡';lbl.textContent='BLAST';}
   else{btn.className='';icon.textContent='⚡';lbl.textContent='-'+(KILLS_PER_POWER-killsSincePower);}
 }
+function updateTroopUI(){
+  var fill=document.getElementById('troopFill'),
+      ready=document.getElementById('troopReady'),
+      kp=document.getElementById('troopProgress'),
+      btn=document.getElementById('troopBtn'),
+      bIcon=document.getElementById('troopBtnIcon'),
+      bLbl=document.getElementById('troopBtnLbl');
+  var nextType=ALLY_TYPES[allyTroopIndex%ALLY_TYPES.length];
+  var nextDef=ALLY_DEFS[nextType];
+  if(troopCD>0){
+    fill.style.width=((1-troopCD/TROOP_CD)*100)+'%';
+    fill.style.background='linear-gradient(90deg,#224433,#446655)';
+    ready.style.opacity='0'; kp.textContent='RECHARGING TROOP...';
+    btn.className='tcool'; bIcon.textContent='🔒'; bLbl.textContent='CD';
+  } else if(troopReady){
+    fill.style.width='100%';
+    fill.style.background='linear-gradient(90deg,#00cc66,#44ffaa)';
+    ready.style.opacity='1'; kp.textContent='🐦 NEXT: '+nextDef.lbl;
+    btn.className='trdy'; bIcon.textContent='🐦'; bLbl.textContent='TROOP';
+  } else {
+    fill.style.width=((troopKills/KILLS_PER_TROOP)*100)+'%';
+    fill.style.background='linear-gradient(90deg,#00cc66,#44ffaa)';
+    ready.style.opacity='0';
+    kp.textContent='KILLS TO TROOP: '+(KILLS_PER_TROOP-troopKills);
+    btn.className=''; bIcon.textContent='🐦'; bLbl.textContent='-'+(KILLS_PER_TROOP-troopKills);
+  }
+}
 function updateHUD(){
   document.getElementById('scoreDisplay').textContent=score;
   document.getElementById('waveDisplay').textContent=wave;
@@ -884,6 +1205,9 @@ function render(){
   }
 
   for(var i=0;i<birds.length;i++) drawBird(birds[i]);
+  for(var i=0;i<allies.length;i++) drawAlly(allies[i]);
+  drawTroopAimLine();
+  drawHoldRing();
   drawNasim();
   drawLasers();
   drawParticles();
@@ -912,6 +1236,14 @@ function render(){
     ctx.font='bold 15px Bangers, cursive';
     ctx.fillStyle='#ffcc00'; ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillText('⚡ EYE POWER READY ⚡',W/2,32); ctx.restore();
+  }
+  // Troop ready hint
+  if(troopReady&&Math.floor(frame/20)%2===0){
+    ctx.save(); ctx.globalAlpha=0.8;
+    ctx.font='bold 14px Bangers, cursive';
+    ctx.fillStyle='#44ffaa'; ctx.textAlign='right'; ctx.textBaseline='middle';
+    var nextLbl=ALLY_DEFS[ALLY_TYPES[allyTroopIndex%ALLY_TYPES.length]].lbl;
+    ctx.fillText('🐦 '+nextLbl+' READY — E',W-10,32); ctx.restore();
   }
   // Boss incoming
   var hasBoss=birds.some(function(b){return b.isBoss;});
@@ -1068,6 +1400,172 @@ function drawNasim(){
   ctx.textAlign='center'; ctx.textBaseline='middle';
   ctx.fillText('NASIM',cx,y+112);
   ctx.restore();
+}
+
+// ── Draw Ally Bird (Nasim's troop) ────────────────────────────────────
+function drawAlly(a){
+  var d=ALLY_DEFS[a.type];
+  var bw=a.w/2, bh=a.h/2;
+  var wing=Math.sin(a.wp)*(bh*1.1);
+
+  // Rotation angle — face direction of travel
+  var angle=Math.atan2(a.vy,a.vx);
+
+  ctx.save();
+  ctx.translate(a.x,a.y);
+  ctx.rotate(angle); // rotate whole bird to face aim direction
+
+  // Green friendly aura glow
+  ctx.globalAlpha=0.22+Math.sin((a.frame||0)*0.15)*0.1;
+  ctx.fillStyle='#44ffaa';
+  ctx.beginPath(); ctx.arc(0,0,bw*1.6,0,Math.PI*2); ctx.fill();
+  ctx.globalAlpha=1;
+
+  // Wings
+  ctx.fillStyle=d.wing;
+  ctx.beginPath();
+  ctx.moveTo(bw*.25,-bh*.25);
+  ctx.bezierCurveTo(bw*.9,-wing-bh*.5,bw*1.5,-wing-bh*.6,bw*1.7,-wing);
+  ctx.bezierCurveTo(bw*1.2,-bh*.3,bw*.6,-0.1,bw*.25,0); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(bw*.25,bh*.25);
+  ctx.bezierCurveTo(bw*.9,wing+bh*.4,bw*1.5,wing+bh*.5,bw*1.7,wing);
+  ctx.bezierCurveTo(bw*1.2,bh*.3,bw*.6,0.1,bw*.25,0); ctx.fill();
+
+  // Body
+  ctx.fillStyle=d.body;
+  ctx.beginPath(); ctx.ellipse(0,0,bw,bh,0,0,Math.PI*2); ctx.fill();
+
+  // Friendly green outline ring
+  ctx.strokeStyle='#44ffaa'; ctx.lineWidth=1.8; ctx.globalAlpha=0.7;
+  ctx.beginPath(); ctx.ellipse(0,0,bw+2,bh+2,0,0,Math.PI*2); ctx.stroke();
+  ctx.globalAlpha=1;
+
+  // Tail (back — left side)
+  ctx.fillStyle=d.wing;
+  ctx.beginPath();
+  ctx.moveTo(-bw*.8,0); ctx.lineTo(-bw*1.65,-bh*.55);
+  ctx.lineTo(-bw*1.85,0); ctx.lineTo(-bw*1.65,bh*.55);
+  ctx.closePath(); ctx.fill();
+
+  // Head (front — right side)
+  var hx=bw*.72, hy=-bh*.22;
+  ctx.fillStyle=d.body;
+  ctx.beginPath(); ctx.ellipse(hx,hy,bw*.55,bh*.72,0.2,0,Math.PI*2); ctx.fill();
+
+  // Beak
+  ctx.fillStyle=d.beak;
+  ctx.beginPath();
+  ctx.moveTo(hx+bw*.44,hy-2); ctx.lineTo(hx+bw*.44+bw*.55,hy+1);
+  ctx.lineTo(hx+bw*.44,hy+4); ctx.closePath(); ctx.fill();
+
+  // Eye
+  ctx.fillStyle=d.eyeCol;
+  ctx.beginPath(); ctx.arc(hx+bw*.14,hy-bh*.1,bh*.28,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(hx+bw*.18,hy-bh*.1,bh*.15,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(hx+bw*.22,hy-bh*.16,bh*.07,0,Math.PI*2); ctx.fill();
+
+  // Star marker
+  ctx.fillStyle='#44ffaa'; ctx.globalAlpha=0.85;
+  ctx.font='bold '+(bh*.85)+'px sans-serif';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('★',0,0);
+  ctx.globalAlpha=1;
+
+  // Name label (unrotated — always horizontal)
+  ctx.rotate(-angle);
+  ctx.font='bold 7px Orbitron, monospace';
+  var textW=ctx.measureText(d.lbl).width;
+  var lblW=Math.max(textW+14,40);
+  var lblH=13;
+  ctx.fillStyle=d.nc;
+  ctx.beginPath(); ctx.roundRect(-lblW/2,bh+4,lblW,lblH,3); ctx.fill();
+  ctx.strokeStyle='#44ffaa88'; ctx.lineWidth=1.2; ctx.stroke();
+  ctx.fillStyle=d.tc;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(d.lbl,0,bh+4+lblH/2);
+
+  ctx.restore();
+}
+
+// Draw hold-to-troop charging ring at touch position
+function drawHoldRing(){
+  if(touchHoldProgress<=0) return;
+  var x=mouseX, y=mouseY;
+  var p=touchHoldProgress;
+  ctx.save();
+
+  // Outer pulse ring
+  ctx.globalAlpha=p*0.3;
+  ctx.strokeStyle='#44ffaa';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  ctx.arc(x,y,28+p*10,0,Math.PI*2);
+  ctx.stroke();
+
+  // Progress arc (fills clockwise)
+  ctx.globalAlpha=0.55+p*0.3;
+  ctx.strokeStyle='#44ffaa';
+  ctx.lineWidth=4;
+  ctx.lineCap='round';
+  ctx.beginPath();
+  ctx.arc(x,y,20,-Math.PI/2,-Math.PI/2+p*Math.PI*2);
+  ctx.stroke();
+
+  // Center dot
+  ctx.globalAlpha=p;
+  ctx.fillStyle='#44ffaa';
+  ctx.beginPath();
+  ctx.arc(x,y,4,0,Math.PI*2);
+  ctx.fill();
+
+  // Label
+  if(p>0.4){
+    ctx.globalAlpha=(p-0.4)/0.6;
+    ctx.font='bold 9px Orbitron, monospace';
+    ctx.fillStyle='#44ffaa';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText(touchHolding?'RELEASE TO LAUNCH':'HOLD...', x, y-34);
+  }
+
+  ctx.restore();
+}
+
+// Draw aim direction indicator at Nasim when troop is ready
+function drawTroopAimLine(){
+  if(!troopReady||troopCD>0) return;
+  var cx=nasim.x+nasim.w/2, cy=nasim.y;
+  var tx=mouseX, ty=mouseY;
+  var baseAngle=Math.atan2(ty-cy, tx-cx);
+  var spreads=[-0.28, 0, 0.28];
+  var colors=['#ffaa44','#44ffaa','#44aaff'];
+
+  for(var si=0;si<3;si++){
+    var ang=baseAngle+spreads[si];
+    var nx=Math.cos(ang), ny=Math.sin(ang);
+    var dist=Math.min(Math.sqrt((tx-cx)*(tx-cx)+(ty-cy)*(ty-cy)), 200);
+
+    ctx.save();
+    ctx.globalAlpha=0.4+Math.sin(frame*0.15+si)*0.2;
+    ctx.strokeStyle=colors[si];
+    ctx.lineWidth=1.5;
+    ctx.setLineDash([6,5]);
+    ctx.beginPath();
+    ctx.moveTo(cx+nx*50, cy+ny*50);
+    ctx.lineTo(cx+nx*dist, cy+ny*dist);
+    ctx.stroke();
+    // Arrowhead
+    ctx.setLineDash([]);
+    ctx.fillStyle=colors[si];
+    var ex=cx+nx*dist, ey=cy+ny*dist;
+    ctx.save();
+    ctx.translate(ex,ey);
+    ctx.rotate(ang);
+    ctx.beginPath(); ctx.moveTo(9,0); ctx.lineTo(-5,-4); ctx.lineTo(-5,4); ctx.closePath(); ctx.fill();
+    ctx.restore();
+    ctx.restore();
+  }
 }
 
 // ── Draw Bird ─────────────────────────────────────────────────────────
