@@ -104,12 +104,14 @@ html,body{width:100%;height:100%;background:#060610;overflow:hidden;font-family:
         <div>🟢 <b>MAHAFUZ</b> slow 30</div><div>🔴 <b>RUDRA</b> zigzag 150</div>
         <div>🟣 <b>JISAN</b> wave 120</div><div>⚪ <b>SOUMITRA</b> swift 50</div>
         <div>⬛ <b>RIAZ</b> fat 40</div><div>💀 <b>A SECTION</b> boss 500</div>
+        <div>🐍 <b>FUSSY HASIB</b> snake 80</div><div>🐍 <b>SHAWON</b> snake 140</div>
       </div>
       <div class="ov-hints">
         <div class="hl gold">⚡ KILL 4 → EYE BLAST FROM EYES (CTRL+Q / ⚡ btn)</div>
         <div class="hl grn">🐦 KILL 3 → NASIM LAUNCHES BIRD TROOP (E / 🐦 btn)</div>
         <div class="hl blue">🛡 SHIELD AUTO-ABSORBS 1 HIT · RECHARGES OVER TIME</div>
         <div class="hl grn">💀 KILL BOSS → SHIELD + LIFE RESTORED</div>
+        <div class="hl red">🐍 FUSSY HASIB &amp; SHAWON ARE SNAKES — THEY SLITHER OPPOSITE TO NASIM!</div>
         <div class="hl red">TAP=SHOOT · HOLD FINGER=AIM TROOP → RELEASE=LAUNCH</div>
       </div>
       <button id="startBtn" onclick="startGame()">▶ PLAY</button>
@@ -144,19 +146,28 @@ function sndWave(){var ac=getAC(),t=ac.currentTime;playTone(440,'sine',.2,.01,.1
 function sndTroopLaunch(){var ac=getAC(),t=ac.currentTime;playTone(880,'square',.18,.01,.1,t);playTone(1100,'square',.15,.01,.1,t+.07);playTone(1320,'square',.18,.01,.15,t+.13);playNoise(.12,.005,.08,600,t);}
 function sndTroopReady(){var ac=getAC(),t=ac.currentTime;playTone(660,'sine',.18,.01,.12,t);playTone(880,'sine',.15,.01,.1,t+.09);playTone(1100,'sine',.2,.01,.16,t+.16);}
 function sndAllyKill(){playTone(660,'triangle',.2,.005,.1);playNoise(.15,.005,.08,500);}
+function sndSnakeHiss(){try{var ac=getAC(),mg=getMaster(),t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain(),f=ac.createBiquadFilter();o.type='sawtooth';o.frequency.setValueAtTime(150,t);o.frequency.linearRampToValueAtTime(80,t+.3);f.type='bandpass';f.frequency.value=600;f.Q.value=2;g.gain.setValueAtTime(.18,t);g.gain.exponentialRampToValueAtTime(.0001,t+.3);o.connect(f);f.connect(g);g.connect(mg);o.start(t);o.stop(t+.35);playNoise(.12,.01,.22,1200,t);}catch(e){}}
 
 // ════ DEFS ════
 var DEFS={
-  akash:   {pts:100,hp:3,w:58,h:42,spd:.9, move:'straight',body:'#d4a800',wing:'#ffcc00',nc:'#6a4800',tc:'#fff200',lbl:'AKASH'},
-  masud:   {pts:70, hp:2,w:42,h:30,spd:1.6,move:'straight',body:'#1155cc',wing:'#4488ff',nc:'#001a66',tc:'#88ccff',lbl:'MASUD'},
-  mahafuz: {pts:30, hp:2,w:50,h:38,spd:.75,move:'straight',body:'#228833',wing:'#44bb55',nc:'#0a2a10',tc:'#88ff99',lbl:'MAHAFUZ'},
-  rudra:   {pts:150,hp:1,w:28,h:22,spd:2.8,move:'zigzag', body:'#cc1122',wing:'#ff3344',nc:'#550008',tc:'#ffaaaa',lbl:'RUDRA'},
-  jisan:   {pts:120,hp:2,w:40,h:30,spd:2.0,move:'wave',   body:'#7722cc',wing:'#aa55ff',nc:'#2a0066',tc:'#cc99ff',lbl:'JISAN'},
-  soumitra:{pts:50, hp:1,w:26,h:20,spd:2.4,move:'straight',body:'#888',  wing:'#bbb',  nc:'#ff6600',tc:'#fff',   lbl:'SOUMITRA'},
-  riaz:    {pts:40, hp:3,w:56,h:44,spd:.8, move:'straight',body:'#111',  wing:'#333',  nc:'#ff2244',tc:'#fff',   lbl:'RIAZ'},
-  asection:{pts:500,hp:20,w:90,h:66,spd:.5,move:'wave',   body:'#880000',wing:'#cc2222',nc:'#ff9900',tc:'#fff',  lbl:'A SECTION'}
+  akash:   {pts:100,hp:3,w:58,h:42,spd:.9, move:'straight',body:'#d4a800',wing:'#ffcc00',nc:'#6a4800',tc:'#fff200',lbl:'AKASH',   isSnake:false},
+  masud:   {pts:70, hp:2,w:42,h:30,spd:1.6,move:'straight',body:'#1155cc',wing:'#4488ff',nc:'#001a66',tc:'#88ccff',lbl:'MASUD',   isSnake:false},
+  mahafuz: {pts:30, hp:2,w:50,h:38,spd:.75,move:'straight',body:'#228833',wing:'#44bb55',nc:'#0a2a10',tc:'#88ff99',lbl:'MAHAFUZ', isSnake:false},
+  rudra:   {pts:150,hp:1,w:28,h:22,spd:2.8,move:'zigzag', body:'#cc1122',wing:'#ff3344',nc:'#550008',tc:'#ffaaaa',lbl:'RUDRA',   isSnake:false},
+  jisan:   {pts:120,hp:2,w:40,h:30,spd:2.0,move:'wave',   body:'#7722cc',wing:'#aa55ff',nc:'#2a0066',tc:'#cc99ff',lbl:'JISAN',   isSnake:false},
+  soumitra:{pts:50, hp:1,w:26,h:20,spd:2.4,move:'straight',body:'#888',  wing:'#bbb',  nc:'#ff6600',tc:'#fff',   lbl:'SOUMITRA', isSnake:false},
+  riaz:    {pts:40, hp:3,w:56,h:44,spd:.8, move:'straight',body:'#111',  wing:'#333',  nc:'#ff2244',tc:'#fff',   lbl:'RIAZ',     isSnake:false},
+  asection:{pts:500,hp:20,w:90,h:66,spd:.5,move:'wave',   body:'#880000',wing:'#cc2222',nc:'#ff9900',tc:'#fff',  lbl:'A SECTION',isSnake:false},
+  // ── NEW SNAKE ENEMIES ──
+  fussyhasib:{pts:80, hp:2,w:54,h:20,spd:1.7,move:'straight',body:'#2d7a2d',wing:'#44aa44',nc:'#0a2a0a',tc:'#aaffaa',lbl:'FUSSY HASIB',isSnake:true,
+              sc1:'#2d7a2d',sc2:'#1a4d1a',sc3:'#55cc55',headCol:'#1a5c1a',tongueCol:'#ff2244',eyeCol:'#ffee00',segCount:7},
+  shawon:    {pts:140,hp:1,w:38,h:16,spd:2.2,move:'zigzag', body:'#8822aa',wing:'#aa44cc',nc:'#330044',tc:'#dd88ff',lbl:'SHAWON',    isSnake:true,
+              sc1:'#8822aa',sc2:'#551177',sc3:'#cc44ff',headCol:'#661188',tongueCol:'#ff88ff',eyeCol:'#ff4400',segCount:5}
 };
 var TYPES=['akash','masud','mahafuz','rudra','jisan','soumitra','riaz'];
+// Snake types spawn separately
+var SNAKE_TYPES=['fussyhasib','shawon'];
+
 var ALLY_DEFS={
   nahid:  {power:70, w:46,h:36,spd:1.2,move:'zigzag',  body:'#1a1a1a',wing:'#333',   beak:'#888',   eyeCol:'#ff4444',nc:'#000',   tc:'#44ffaa',lbl:'NAHID'},
   mrinmoy:{power:100,w:36,h:28,spd:3.5,move:'zigzag',  body:'#1155ee',wing:'#4488ff',beak:'#ffdd00',eyeCol:'#ffff00',nc:'#001166',tc:'#88ccff',lbl:'MRINMOY'},
@@ -167,7 +178,7 @@ var ALLY_TYPES=['nahid','mrinmoy','noyon'];
 // ════ STATE ════
 var state='menu',score=0,kills=0,wave=1,frame=0,bestScore=0;
 var birds=[],lasers=[],particles=[],allies=[];
-var spawnTimer=0,spawnInterval=110;
+var spawnTimer=0,spawnInterval=110,snakeSpawnTimer=0,snakeSpawnInterval=200;
 var mouseX=W/2,mouseY=H/2,rafId=null;
 var KILLS_PER_POWER=4,POWER_CD=280;
 var killsSincePower=0,powerReady=false,powerCD=0,powerActive=false,powerBlastTimer=0;
@@ -181,7 +192,6 @@ var bossThreshold=-1;
 var touchHoldTimer=null,touchHolding=false,touchHoldX=W/2,touchHoldY=H/2,touchHoldProgress=0;
 var nasim={x:72,y:H-138,w:56,lastShot:0};
 
-// ── exact eye positions — MUST match drawNasim eye positions ──
 function getEyes(){
   var cx=nasim.x+nasim.w/2;
   return [{x:cx-9,y:nasim.y-11},{x:cx+9,y:nasim.y-11}];
@@ -220,7 +230,8 @@ function mbTap(e,w){e.preventDefault();e.stopPropagation();if(w==='blast')activa
 function startGame(){
   getAC();document.getElementById('overlay').style.display='none';
   score=0;kills=0;wave=1;frame=0;birds=[];lasers=[];particles=[];allies=[];
-  spawnTimer=0;spawnInterval=110;killsSincePower=0;powerReady=false;powerCD=0;powerActive=false;powerBlastTimer=0;
+  spawnTimer=0;spawnInterval=110;snakeSpawnTimer=0;snakeSpawnInterval=200;
+  killsSincePower=0;powerReady=false;powerCD=0;powerActive=false;powerBlastTimer=0;
   shieldHP=1;shieldBroken=false;shieldRegen=0;shieldFlash=0;lives=MAX_LIVES;combo=0;comboTimer=0;
   bossThreshold=-1;troopKills=0;troopReady=false;troopCD=0;allyTroopIndex=0;
   _wasReady=false;_wasTroopReady=false;touchHolding=false;touchHoldProgress=0;clearTimeout(touchHoldTimer);
@@ -228,7 +239,7 @@ function startGame(){
   if(rafId)cancelAnimationFrame(rafId);rafId=requestAnimationFrame(loop);
 }
 
-// ════ SHOOT — from exact eye positions ════
+// ════ SHOOT ════
 function shoot(tx,ty){
   var now=Date.now();if(now-nasim.lastShot<110)return;nasim.lastShot=now;
   var eyes=getEyes();
@@ -241,7 +252,7 @@ function shoot(tx,ty){
   sndShoot();
 }
 
-// ════ EYE BLAST — fan from exact eye positions ════
+// ════ EYE BLAST ════
 function activatePower(){
   if(!powerReady||powerCD>0||powerActive)return;
   powerActive=true;powerBlastTimer=55;powerReady=false;killsSincePower=0;powerCD=POWER_CD;
@@ -256,7 +267,7 @@ function activatePower(){
   bigFlash(nasim.x+nasim.w/2,nasim.y-11);sndBlast();updateBlastBtn();
 }
 
-// ════ TROOP — from Nasim's position ════
+// ════ TROOP ════
 function activateTroop(){
   if(!troopReady||troopCD>0)return;
   troopReady=false;troopKills=0;troopCD=TROOP_CD;
@@ -308,7 +319,30 @@ function pickType(){
 function spawnBird(type){
   type=type||pickType();var d=DEFS[type];
   var yp=(type==='asection')?H/2-d.h/2:90+Math.random()*(H-230);
-  birds.push({x:W+110,y:yp,baseY:yp,type:type,w:d.w,h:d.h,speed:d.spd*(1+wave*.07),move:d.move,hp:d.hp,maxHp:d.hp,pts:d.pts,wp:Math.random()*Math.PI*2,zDir:1,zTimer:0,wOff:Math.random()*Math.PI*2,flash:0,isBoss:type==='asection'});
+  birds.push({x:W+110,y:yp,baseY:yp,type:type,w:d.w,h:d.h,speed:d.spd*(1+wave*.07),move:d.move,hp:d.hp,maxHp:d.hp,pts:d.pts,wp:Math.random()*Math.PI*2,zDir:1,zTimer:0,wOff:Math.random()*Math.PI*2,flash:0,isBoss:type==='asection',isSnake:false});
+}
+
+// ── SNAKE SPAWN — they come from the RIGHT side (opposite to Nasim on left) ──
+function spawnSnake(type){
+  type=type||SNAKE_TYPES[Math.floor(Math.random()*SNAKE_TYPES.length)];
+  var d=DEFS[type];
+  var yp=80+Math.random()*(H-220);
+  // Snake segments: array of {x,y} positions
+  var segs=[];
+  for(var i=0;i<d.segCount;i++){
+    segs.push({x:W+80+i*18,y:yp});
+  }
+  birds.push({
+    x:W+80,y:yp,baseY:yp,
+    type:type,w:d.w,h:d.h,
+    speed:d.spd*(1+wave*.06),
+    move:d.move,hp:d.hp,maxHp:d.hp,pts:d.pts,
+    wp:Math.random()*Math.PI*2,
+    zDir:1,zTimer:0,wOff:Math.random()*Math.PI*2,
+    flash:0,isBoss:false,isSnake:true,
+    segs:segs,segTimer:0,
+    tongue:0,tongueDir:1
+  });
 }
 
 // ════ LOOP ════
@@ -317,6 +351,7 @@ function loop(){if(state!=='playing'){rafId=null;return;}update();render();updat
 // ════ UPDATE ════
 function update(){
   frame++;wave=1+Math.floor(kills/12);spawnInterval=Math.max(38,110-wave*9);
+  snakeSpawnInterval=Math.max(80,200-wave*12);
   if(powerCD>0){powerCD--;if(powerCD<=0&&killsSincePower>=KILLS_PER_POWER)powerReady=true;}
   if(powerBlastTimer>0){powerBlastTimer--;if(powerBlastTimer<=0)powerActive=false;}
   if(troopCD>0){troopCD--;if(troopCD<=0&&troopKills>=KILLS_PER_TROOP)troopReady=true;}
@@ -327,7 +362,12 @@ function update(){
   if(comboTimer>0){comboTimer--;if(comboTimer<=0)combo=0;}
   if(touchHolding)touchHoldProgress=Math.min(touchHoldProgress+1/19,1);
   else if(touchHoldProgress>0)touchHoldProgress=Math.max(touchHoldProgress-.08,0);
+
+  // Bird spawn
   spawnTimer++;if(spawnTimer>=spawnInterval){spawnTimer=0;spawnBird();if(wave>=4&&Math.random()<.35)spawnBird();}
+  // Snake spawn — starts from wave 2
+  if(wave>=2){snakeSpawnTimer++;if(snakeSpawnTimer>=snakeSpawnInterval){snakeSpawnTimer=0;spawnSnake();}}
+
   if(wave>=3&&kills>0&&kills%18===0&&kills!==bossThreshold&&!birds.some(function(b){return b.isBoss;})){bossThreshold=kills;spawnBird('asection');sndBossSpawn();}
   for(var i=lasers.length-1;i>=0;i--){var l=lasers[i];l.x+=l.vx;l.y+=l.vy;l.life--;if(l.life<=0||l.x>W+40||l.x<-40||l.y<-40||l.y>H+40)lasers.splice(i,1);}
 
@@ -355,11 +395,32 @@ function update(){
     }
   }
 
-  // Birds
+  // Birds & Snakes
   for(var i=birds.length-1;i>=0;i--){
     var b=birds[i];b.x-=b.speed;b.wp+=.20;if(b.flash>0)b.flash--;
-    if(b.move==='zigzag'){b.zTimer++;if(b.zTimer>22){b.zDir*=-1;b.zTimer=0;}b.y+=b.zDir*2.2;if(b.y<65)b.y=65;if(b.y>H-105)b.y=H-105;}
-    else if(b.move==='wave')b.y=b.baseY+Math.sin(frame*.045+b.wOff)*(b.isBoss?70:55);
+
+    // Snake-specific movement update
+    if(b.isSnake){
+      b.segTimer++;
+      b.tongue=(b.tongue||0)+b.tongueDir*.08;
+      if(b.tongue>1||b.tongue<0)b.tongueDir*=-1;
+      // Update segment positions (follow the leader)
+      if(b.segTimer>=3){
+        b.segTimer=0;
+        for(var si=b.segs.length-1;si>0;si--){
+          b.segs[si].x=b.segs[si-1].x;
+          b.segs[si].y=b.segs[si-1].y;
+        }
+        b.segs[0].x=b.x;
+        b.segs[0].y=b.y;
+      }
+      // Zigzag for shawon
+      if(b.move==='zigzag'){b.zTimer++;if(b.zTimer>22){b.zDir*=-1;b.zTimer=0;}b.y+=b.zDir*2.8;if(b.y<65)b.y=65;if(b.y>H-80)b.y=H-80;}
+    } else {
+      if(b.move==='zigzag'){b.zTimer++;if(b.zTimer>22){b.zDir*=-1;b.zTimer=0;}b.y+=b.zDir*2.2;if(b.y<65)b.y=65;if(b.y>H-105)b.y=H-105;}
+      else if(b.move==='wave')b.y=b.baseY+Math.sin(frame*.045+b.wOff)*(b.isBoss?70:55);
+    }
+
     var killed=false;
     for(var j=lasers.length-1;j>=0;j--){
       var l=lasers[j];
@@ -424,7 +485,10 @@ function render(){
   drawBG();
   if(powerActive&&powerBlastTimer>40){var ft=(powerBlastTimer-40)/10;ctx.save();ctx.globalAlpha=Math.min(.28,ft*.28);ctx.fillStyle='#ffcc00';ctx.fillRect(0,0,W,H);ctx.restore();}
   if(shieldFlash>0){ctx.save();ctx.globalAlpha=(shieldFlash/25)*.3;ctx.fillStyle='#44aaff';ctx.fillRect(0,0,W,H);ctx.restore();}
-  for(var i=0;i<birds.length;i++)drawBird(birds[i]);
+  for(var i=0;i<birds.length;i++){
+    if(birds[i].isSnake)drawSnake(birds[i]);
+    else drawBird(birds[i]);
+  }
   for(var i=0;i<allies.length;i++)drawAlly(allies[i]);
   drawTroopAimLine();drawHoldRing();drawNasim();drawLasers();drawParticles();
   if(kills>0&&kills%12===0&&frame%130===1)sndWave();
@@ -461,9 +525,87 @@ function drawLasers(){
   }
 }
 
+// ════ DRAW SNAKE ════
+// Snakes come from the right and move LEFT — opposite to Nasim who is on left
+function drawSnake(b){
+  var d=DEFS[b.type];
+  var flash=b.flash>0;
+  var segs=b.segs||[];
+  var segR=d.h/2; // segment radius based on height
+  var headR=segR*1.35;
+
+  ctx.save();
+
+  // Draw body segments (tail to second segment, back to front)
+  for(var si=segs.length-1;si>=1;si--){
+    var sx=segs[si].x,sy=segs[si].y;
+    var t2=(segs.length-1-si)/(segs.length-1); // 0=head, 1=tail
+    // Alternate scale pattern
+    var scaleCol=(si%2===0)?d.sc1:d.sc2;
+    if(flash)scaleCol='#fff';
+    var r=segR*(0.55+0.45*(1-si/(segs.length-1)));
+    // Glow aura
+    ctx.globalAlpha=0.13;ctx.fillStyle=d.sc3;ctx.beginPath();ctx.arc(sx,sy,r+4,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+    // Segment body
+    ctx.fillStyle=scaleCol;ctx.beginPath();ctx.arc(sx,sy,r,0,Math.PI*2);ctx.fill();
+    // Scale lines
+    if(!flash){
+      ctx.strokeStyle=d.sc3;ctx.lineWidth=0.7;ctx.globalAlpha=0.4;
+      ctx.beginPath();ctx.arc(sx,sy,r*.7,Math.PI*.2,Math.PI*.8);ctx.stroke();
+      ctx.globalAlpha=1;
+    }
+  }
+
+  // Draw head
+  var hx=b.x,hy=b.y;
+  // Head glow
+  ctx.globalAlpha=flash?.55:.22;ctx.fillStyle=d.sc3;ctx.beginPath();ctx.arc(hx,hy,headR+6,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+  // Head shape (slightly elongated oval)
+  ctx.fillStyle=flash?'#fff':d.headCol;ctx.beginPath();ctx.ellipse(hx-headR*.15,hy,headR*1.3,headR,0,0,Math.PI*2);ctx.fill();
+  // Head scale texture
+  if(!flash){
+    ctx.strokeStyle=d.sc3;ctx.lineWidth=1;ctx.globalAlpha=.35;
+    ctx.beginPath();ctx.arc(hx,hy,headR*.75,-Math.PI*.3,Math.PI*.3);ctx.stroke();
+    ctx.globalAlpha=1;
+  }
+  // Eyes — two eyes on head facing left (moving toward Nasim)
+  var eyeOffY=[-headR*.35,headR*.35];
+  for(var ei=0;ei<2;ei++){
+    var ex2=hx-headR*.3,ey2=hy+eyeOffY[ei];
+    ctx.fillStyle=flash?'#fff':d.eyeCol;ctx.beginPath();ctx.arc(ex2,ey2,headR*.28,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#000';ctx.beginPath();ctx.arc(ex2-1,ey2,headR*.14,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(ex2-2,ey2-headR*.07,headR*.06,0,Math.PI*2);ctx.fill();
+  }
+  // Forked tongue (flickers)
+  var tongLen=headR*1.4+b.tongue*headR*.5;
+  var tx0=hx-headR*1.2,ty0=hy;
+  ctx.strokeStyle=flash?'#fff':d.tongueCol;ctx.lineWidth=1.5;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(tx0,ty0);ctx.lineTo(tx0-tongLen,ty0);ctx.stroke();
+  // Fork
+  ctx.beginPath();ctx.moveTo(tx0-tongLen,ty0);ctx.lineTo(tx0-tongLen-headR*.5,ty0-headR*.3);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(tx0-tongLen,ty0);ctx.lineTo(tx0-tongLen-headR*.5,ty0+headR*.3);ctx.stroke();
+
+  // HP bar
+  if(d.hp>1&&b.hp<b.maxHp){
+    var bw2=d.w+10,hpP=b.hp/b.maxHp;
+    ctx.fillStyle='#333';ctx.fillRect(hx-bw2/2,hy-headR-16,bw2,6);
+    ctx.fillStyle=flash?'#fff':hpP>.5?'#44dd44':'#ff6622';ctx.fillRect(hx-bw2/2,hy-headR-16,bw2*hpP,6);
+  }
+
+  // Label tag
+  ctx.font='bold 7px Orbitron, monospace';
+  var tw=ctx.measureText(d.lbl).width,lw2=Math.max(tw+14,52),lh=13;
+  ctx.fillStyle=d.nc;ctx.fillRect(hx-lw2/2,hy+headR+4,lw2,lh);
+  ctx.strokeStyle=d.sc3+'88';ctx.lineWidth=1.2;ctx.strokeRect(hx-lw2/2,hy+headR+4,lw2,lh);
+  ctx.fillStyle=d.tc;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.lbl,hx,hy+headR+4+lh/2);
+
+  // 🐍 icon indicator
+  ctx.font='10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🐍',hx+headR+8,hy-headR-4);
+
+  ctx.restore();
+}
+
 // ════ DRAW NASIM ════
-// Eye positions: cx-9, nasim.y-11  and  cx+9, nasim.y-11
-// These MUST match getEyes() above exactly
 function drawNasim(){
   var x=nasim.x,y=nasim.y,cx=x+nasim.w/2;
   var glowing=powerActive||(powerReady&&powerCD<=0);
@@ -480,9 +622,7 @@ function drawNasim(){
   ctx.fillStyle='#160900';ctx.beginPath();ctx.ellipse(cx,y-26,22,11,0,Math.PI,Math.PI*2);ctx.fill();
   var sp=[[cx-12,y-28],[cx-16,y-40],[cx-6,y-30],[cx,y-38],[cx+6,y-30],[cx+16,y-40],[cx+12,y-28]];
   ctx.beginPath();ctx.moveTo(sp[0][0],sp[0][1]);for(var si=1;si<sp.length;si++)ctx.lineTo(sp[si][0],sp[si][1]);ctx.fill();
-
-  // ── EYES — positions cx-9 and cx+9 at y-11 (matches getEyes exactly) ──
-  var eyeY=y-11, ec=glowing?'#ffcc00':'#ff2244';
+  var eyeY=y-11,ec=glowing?'#ffcc00':'#ff2244';
   var eyeXs=[cx-9,cx+9];
   for(var ei=0;ei<2;ei++){
     var ex=eyeXs[ei];
